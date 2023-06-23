@@ -5,13 +5,8 @@ import time
 push1 = Pin(10, Pin.IN, Pin.PULL_UP)
 push2 = Pin(11, Pin.IN, Pin.PULL_UP)
 
-
+#default frequency is hard set to 89.0, but you can change it
 frec = 89.0
-#frec = 92.7
-frec1 = 92
-frec2 = 7
-std1 = 1
-std2 = 1
 
 i2c = I2C(1,scl=Pin(15), sda=Pin(14), freq=400000)
 
@@ -30,3 +25,32 @@ def radio_frequency(freq):
     time.sleep_ms(10)
     
 radio_frequency(frec)
+
+#setup the pin buttons
+left_button = Pin(2,Pin.IN, Pin.PULL_DOWN)
+right_button = Pin(3, Pin,IN, Pin.PULL_DOWN)
+
+while True:
+    #check if the state of the left button
+    #changes station frequency down if left button is pressed
+    #changes frequency up if the right button is pressed
+    if left_button.value():
+        print("-------------------------")
+        print("")
+        print("Changing Station Down")
+        frec = frec-0.1
+        radio_frequency(frec)
+        print(frec)
+        print("")
+        print("--------------------------")
+    if right_button.value():
+        print("--------------------------")
+        print("")
+        print("Changing Station Up")
+        frec = frec + 0.1
+        radio_frequency(frec)
+        print(frec)
+        print("")
+        print("--------------------------")
+    #Wait for a short time to avoid constantly checking the buttons
+    time.sleep(0.1)
